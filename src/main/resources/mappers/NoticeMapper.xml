@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rt.yggl.mapper.NoticeMapper">
+    <sql id="notice_cloum">
+        notice_id
+        id,
+        notice_action noAction,
+        notice_date noTime
+    </sql>
+    <select id="findNotice" resultType="com.rt.yggl.po.Notice">
+        select <include refid="notice_cloum"></include> from notice where notice_id=1
+    </select>
+    <update id="updateNotice">
+        update notice
+        set notice_id=0
+        where notice_id = 1
+    </update>
+    <insert id="addNotice" parameterType="com.rt.yggl.po.Notice">
+        insert into notice(notice_id, notice_action, notice_date)
+        values (1, #{noAction}, #{noTime})
+    </insert>
+</mapper>

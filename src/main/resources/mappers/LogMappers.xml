@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rt.yggl.mapper.LogMapper">
+    <insert id="addLog" parameterType="com.rt.yggl.po.Log">
+        insert into log(log_id, log_name, log_time, log_user_id, log_ip)
+        values (0, #{logName}, #{logTime}, #{logUserId}, #{userIp})
+    </insert>
+    <sql id="log_cloum">
+        log_id
+        logId,
+        log_name logName,
+        log_ip userIp,
+        log_time logTime,
+        realname
+    </sql>
+    <sql id="loginfo_cloum">
+        log_id
+        logId,
+        log_name logName,
+        log_ip userIp,
+        log_time logTime,
+        log_user_id logUserId
+
+    </sql>
+
+    <select id="findAll" resultType="com.rt.yggl.po.Log">
+        select <include refid="log_cloum"></include> from log l,user u where l.log_user_id=u.user_id
+    </select>
+
+    <select id="findLogByInfo" parameterType="com.rt.yggl.vo.LogInfo" resultType="com.rt.yggl.po.Log">
+        select <include refid="loginfo_cloum"></include> from log
+        <where>
+            <trim suffixOverrides="and|or">
+                <if test="userId!=''">
+                    log_user_id=#{userId} or
+                </if>
+                <if test="date1!=null">
+                    log_time between #{date1} and #{date2}
+                </if>
+            </trim>
+        </where>
+    </select>
+</mapper>

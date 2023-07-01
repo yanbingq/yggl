@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rt.yggl.mapper.UserMapper">
+    <sql id="user_cloum">
+        user_id
+        userid,
+        loginname,
+        password,
+        user_tel usertel,
+        addres,
+        gender,
+        realname
+    </sql>
+    <sql id="userInfo_cloum">
+        u
+        .
+        user_id
+        userid,
+        loginname,
+        password,
+        user_tel usertel,
+        addres,
+        gender,
+        realname,
+        role_name rolename
+    </sql>
+    <select id="findOneByLoginName" parameterType="string" resultType="com.rt.yggl.po.User">
+        select <include refid="user_cloum"></include> from user where loginname=#{name}
+    </select>
+    <select id="findUserInfo" parameterType="string" resultType="com.rt.yggl.vo.UserInfo">
+        select
+        <include refid="userInfo_cloum"></include>
+        from user u,user_role ur,role r
+        where u.user_id=ur.userid and ur.role_id=r.role_id and loginname=#{name}
+    </select>
+
+    <update id="updateUser" parameterType="com.rt.yggl.po.User">
+        update user
+        set loginname=#{loginname},
+            user_tel=#{usertel},
+            addres=#{addres},
+            gender=#{gender},
+            realname=#{realname}
+        where user_id = #{userid}
+
+    </update>
+
+    <update id="savepass" parameterType="com.rt.yggl.vo.UpUserpass">
+        update user
+        set password=#{password}
+        where loginname = #{loginname}
+    </update>
+
+    <select id="findAll" resultType="com.rt.yggl.vo.UserInfo">
+        select
+        <include refid="userInfo_cloum"></include>
+        from user u,user_role ur,role r where u.user_id=ur.userid and ur.role_id=r.role_id
+    </select>
+    <delete id="delUser" parameterType="int">
+        delete
+        from user
+        where user_id = #{id}
+    </delete>
+    <delete id="delUserRole" parameterType="int">
+        delete
+        from user_role
+        where userid = #{id}
+    </delete>
+    <update id="upUserRole" parameterType="com.rt.yggl.po.Role">
+        update user_role
+        set role_id=#{roleId}
+        where userid = #{userId}
+    </update>
+    <insert id="addUser" parameterType="com.rt.yggl.po.User">
+        <selectKey keyColumn="user_id" keyProperty="userid" order="AFTER" resultType="Integer">
+            select last_insert_id()
+        </selectKey>
+        insert into user(user_id,loginname,user_tel,addres,gender,realname,password)
+        values (0,#{loginname},#{usertel},#{addres},#{gender},#{realname},#{password})
+    </insert>
+    <insert id="addRole" parameterType="com.rt.yggl.po.Role">
+        insert into user_role(userid, role_id)
+        values (#{userId}, #{roleId})
+    </insert>
+    <select id="findByReanlname" parameterType="string" resultType="com.rt.yggl.po.User">
+        select <include refid="user_cloum"></include> from user where realname=#{name}
+    </select>
+    <select id="findById" parameterType="int" resultType="com.rt.yggl.po.User">
+        select <include refid="user_cloum"></include> from user where user_id=#{id}
+    </select>
+    <sql id="userRole_cloum">
+        u
+        .
+        user_id
+        userid,
+        loginname,
+        password,
+        user_tel usertel,
+        addres,
+        gender,
+        realname,
+        role_id roleid
+    </sql>
+    <select id="findUserRole" parameterType="string" resultType="com.rt.yggl.vo.UserRole">
+        select <include refid="userRole_cloum"></include> from user u,user_role r
+        where u.user_id=r.userid and loginname=#{name}
+    </select>
+
+</mapper>
